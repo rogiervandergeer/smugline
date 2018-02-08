@@ -50,7 +50,7 @@ Options:
   --privacy=(unlisted | public)
                           album privacy settings [default: unlisted]
   --email=email_address   email address of your smugmug account
-  --passwod=password      smugmug password
+  --password=password     smugmug password
 
 """
 
