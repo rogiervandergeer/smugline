@@ -19,6 +19,7 @@ You only need the `Key` (no need for the `Secret`).
 * listing albums on your smugmug account
 * uploading from a folder (recursively) to an album on smugmug
 * downloading from an album on smugmug to a local folder
+* downloading all albums on smugmug to a local folder
 * existing images will be uploaded only once (skipping duplicates)
 * uploading images, videos or both (default: images)
 * clearing duplicate images or video from an album
@@ -41,6 +42,11 @@ Usage:
                                     [--media=(videos | images | all)]
                                     [--email=email_address]
                                     [--password=password]
+  smugline.py download_all --api-key=<apy_key>
+                           [--to=folder_name]
+                           [--media=(videos | images | all)]
+                           [--email=email_address]
+                           [--password=password]
   smugline.py process <json_file> --api-key=<apy_key>
                                   [--from=folder_name]
                                   [--email=email_address]
@@ -60,6 +66,7 @@ Usage:
 Arguments:
   upload            uploads files to a smugmug album
   download          downloads an entire album into a folder
+  download_all      downloads all albums into a folder structure
   process           processes a json file with upload directives
   list              list album names on smugmug
   create            create a new album
@@ -135,6 +142,16 @@ downloading IMG_123.jpg -> /tmp/
 downloading IMG_124.jpg -> /tmp/
 ...
 downloading IMG_999.jpg -> /tmp/
+```
+
+download all albums to /tmp/ folder
+
+```shell
+$ ./smugline.py download_all --to=/tmp/ --api-key=... --email=your@email.com --password=yourpassword
+downloading IMG_123.jpg -> /tmp/album_1
+downloading IMG_124.jpg -> /tmp/album_1
+...
+downloading IMG_999.jpg -> /tmp/album_2
 ```
 
 creating a new album (will create under 'Other' category)
