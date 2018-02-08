@@ -12,6 +12,11 @@ Usage:
                                     [--media=(videos | images | all)]
                                     [--email=email_address]
                                     [--password=password]
+  smugline.py download_all --api-key=<apy_key>
+                           [--to=folder_name]
+                           [--media=(videos | images | all)]
+                           [--email=email_address]
+                           [--password=password]
   smugline.py process <json_file> --api-key=<apy_key>
                                   [--from=folder_name]
                                   [--email=email_address]
@@ -31,6 +36,7 @@ Usage:
 Arguments:
   upload            uploads files to a smugmug album
   download          downloads an entire album into a folder
+  download_all      downloads all albums into a folder structure
   process           processes a json file with upload directives
   list              list album names on smugmug
   create            create a new album
@@ -158,6 +164,16 @@ class SmugLine(object):
             return
         images = self._get_images_for_album(album, file_filter)
         self._download(images, dest_folder)
+
+    def download_all(self, dest_folder, file_filter=IMG_FILTER):
+        for album in self.get_albums()['Albums']:
+            album_path = [album.get('Category', {}).get('Name'),
+                          album.get('SubCategory', {}).get('Name'),
+                          album.get('Title')]
+            dest_subfolder = os.path.join(dest_folder, *[path for path in album_path if path])
+            os.makedirs(dest_subfolder, exist_ok=True)
+            images = self._get_images_for_album(album, file_filter=file_filter)
+            self._download(images, dest_subfolder)
 
     def _upload(self, images, album_name, album):
         images = self._remove_duplicates(images, album)
@@ -326,6 +342,9 @@ if __name__ == '__main__':
         smugline.download_album(arguments['<album_name>'],
                         arguments['--to'],
                         file_filter)
+    if arguments['download_all']:
+        file_filter = smugline.get_filter(arguments['--media'])
+        smugline.download_all(arguments['--to'], file_filter)
     if arguments['process']:
         smugline.upload_json(arguments['--from'],
                         arguments['<json_file>'])
