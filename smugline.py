@@ -171,7 +171,8 @@ class SmugLine(object):
                           album.get('SubCategory', {}).get('Name'),
                           album.get('Title')]
             dest_subfolder = os.path.join(dest_folder, *[path for path in album_path if path])
-            os.makedirs(dest_subfolder, exist_ok=True)
+            if not os.path.exists(dest_subfolder):
+                os.makedirs(dest_subfolder)
             images = self._get_images_for_album(album, file_filter=file_filter)
             self._download(images, dest_subfolder)
 
